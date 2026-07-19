@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Use relative paths so Vite dev server can proxy /api to the backend
-  baseURL: '/api',
+  // Use VITE_API_URL if provided, default to local proxy /api in dev, and fallback to production API in build
+  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '/api' : 'https://api.bootig.store/api'),
 });
 
 // هذا هو الجزء الأهم: يقوم بإرفاق التوكن مع كل طلب تلقائيًا

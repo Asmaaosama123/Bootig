@@ -8,7 +8,7 @@ import BottomNav from "../components/BottomNav";
 import Header from "../components/Header";
 import { useCart } from "../contexts/CartContext";
 
-const BASE = "/api"; // ← غيّريها لعنوان API
+import api from "../services/api";
 
 const CategoryHierarchyPage = () => {
   const { categoryName } = useParams();
@@ -34,9 +34,9 @@ const CategoryHierarchyPage = () => {
 
   // ⬇️ تحميل الكاتيجورى الرئيسية
   useEffect(() => {
-    fetch(`${BASE}/getActiveCategories`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data.categories || []));
+    api.get("/getActiveCategories")
+      .then((res) => setCategories(res.data.categories || []))
+      .catch((err) => console.error("Error fetching active categories:", err));
   }, []);
 
   // ⬇️ تحميل الصب كاتيجورى والاوفرز والستورز
@@ -44,27 +44,26 @@ const CategoryHierarchyPage = () => {
     if (!activeCategory) return;
 
     // Subcategories
-    fetch(`${BASE}/getSubCategories/${activeCategory}`)
-      .then((res) => res.json())
-      .then((data) => setSubcategories(data.subcategories || []));
+    api.get(`/getSubCategories/${activeCategory}`)
+      .then((res) => setSubcategories(res.data.subcategories || []))
+      .catch((err) => console.error("Error fetching subcategories:", err));
 
     // Offers
-    fetch(`${BASE}/getOffersByCategory/${activeCategory}`)
-      .then((res) => res.json())
-      .then((data) => setOffers(data.products || []));
+    api.get(`/getOffersByCategory/${activeCategory}`)
+      .then((res) => setOffers(res.data.products || []))
+      .catch((err) => console.error("Error fetching offers:", err));
 
     // Stores
-    fetch(`${BASE}/getStoresByCategory/${activeCategory}`)
-      .then((res) => res.json())
-      .then((data) => setTopStores(data.vendors || []));
+    api.get(`/getStoresByCategory/${activeCategory}`)
+      .then((res) => setTopStores(res.data.vendors || []))
+      .catch((err) => console.error("Error fetching stores:", err));
 
     // Hero Images for this category
     setHeroImages([]); // مسح الصور القديمة فوراً عند تغيير الكاتيجورى
-    fetch(`${BASE}/getCategoryByName/${activeCategory}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data.heroImages)) {
-          setHeroImages(data.heroImages);
+    api.get(`/getCategoryByName/${activeCategory}`)
+      .then((res) => {
+        if (Array.isArray(res.data.heroImages)) {
+          setHeroImages(res.data.heroImages);
         }
       })
       .catch(() => setHeroImages([]));

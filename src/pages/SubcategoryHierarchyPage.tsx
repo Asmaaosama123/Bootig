@@ -150,24 +150,11 @@ const SubcategoryHierarchyPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Subcategories Slider */}
-        <div className="flex gap-4 overflow-x-auto px-4 pb-3 scrollbar-hide bg-white">
-          {subcategories.map((sub) => (
-            <div key={sub.name} onClick={() => setSelectedSubcategory(sub.name)} className="flex flex-col items-center cursor-pointer flex-shrink-0">
-              <div className={`w-[72px] h-[72px] rounded-xl overflow-hidden border-2 transition ${selectedSubcategory === sub.name ? "border-black" : "border-gray-200"}`}>
-                <img src={sub.imageUrl} alt={sub.name} className="w-full h-full object-cover" />
-              </div>
-              <p className={`text-[11px] mt-1.5 text-center uppercase font-semibold w-[72px] truncate ${selectedSubcategory === sub.name ? "text-black" : "text-gray-500"}`}>{sub.name}</p>
-            </div>
-          ))}
-        </div>
+
 
         {/* Sub-Sub-Categories Section (Rendered with Image + Name cards) */}
         {subSubcategories.length > 0 && (
           <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
-            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
-              Types / {selectedSubcategory}
-            </p>
             <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-hide">
               {/* Option to select ALL */}
               <div

@@ -82,21 +82,12 @@ const offerProducts: Record<string, any[]> = {
   ],
 };
 
-const categories = [
-  { name: "Woman", img: "https://images.unsplash.com/photo-1520975918318-7adfa3c1b9a0?w=400" },
-  { name: "Men", img: "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?w=400" },
-  { name: "Kids", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400" },
-  { name: "Shoes", img: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400" },
-];
-
 const OffersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { categoryName } = useParams<{ categoryName?: string }>();
   const { state } = useCart();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(categoryName || "woman");
   const [offerProducts, setOfferProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -112,12 +103,10 @@ const OffersPage: React.FC = () => {
   const caseOptions = [...new Set(offerProducts.map((p) => p.caseType || "New"))];
   const shippedOptions = [...new Set(offerProducts.map((p) => p.shippedIn || "One Week"))];
 
-  // Fetch offers dynamically from API
+  // Fetch all offers dynamically from API
   useEffect(() => {
     setLoading(true);
-    // Convert e.g. "Woman" -> "woman", "Men" -> "men", "Kids" -> "kids"
-    const cat = selectedCategory.toLowerCase();
-    api.get(`/getOffersByCategory/${cat}`)
+    api.get(`/getOffersByCategory/all`)
       .then((res) => {
         setOfferProducts(res.data.products || []);
       })
@@ -127,15 +116,7 @@ const OffersPage: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [selectedCategory]);
-
-  // Reset filters when category changes
-  useEffect(() => {
-    setSelectedStores([]);
-    setSelectedCases([]);
-    setSelectedShipped([]);
-    setPriceRange([0, 1000]);
-  }, [selectedCategory]);
+  }, []);
 
   // Client side search and filters
   useEffect(() => {
@@ -162,7 +143,6 @@ const OffersPage: React.FC = () => {
   }, [offerProducts, searchTerm, selectedStores, selectedCases, selectedShipped, priceRange]);
 
   const applyFilters = () => {
-    // Handled dynamically by useEffect above
     setFilterOpen(false);
   };
 
@@ -192,46 +172,9 @@ const OffersPage: React.FC = () => {
             </svg>
           </button>
 
-          <h1 className="font-semibold text-lg capitalize">{selectedCategory}</h1>
+          <h1 className="font-semibold text-lg">Products on Offer</h1>
 
-          <button></button>
-        </div>
-
-        {/* Category Scroll */}
-        <div className="flex overflow-x-auto gap-4 px-4 pb-3">
-          {categories.map((c, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                setSelectedCategory(c.name);
-                navigate(`/offers/${c.name.toLowerCase()}`);
-              }}
-              className={`flex-shrink-0 cursor-pointer text-center ${
-                selectedCategory.toLowerCase() === c.name.toLowerCase()
-                  ? "opacity-100"
-                  : "opacity-60"
-              }`}
-            >
-              <div
-                className={`w-16 h-16 rounded-xl overflow-hidden border-2 ${
-                  selectedCategory.toLowerCase() === c.name.toLowerCase()
-                    ? "border-black"
-                    : "border"
-                }`}
-              >
-                <img src={c.img} alt={c.name} className="w-full h-full object-cover" />
-              </div>
-              <p
-                className={`text-xs mt-1 ${
-                  selectedCategory.toLowerCase() === c.name.toLowerCase()
-                    ? "text-black font-semibold"
-                    : "text-gray-600"
-                }`}
-              >
-                {c.name}
-              </p>
-            </div>
-          ))}
+          <div className="w-9" />
         </div>
       </div>
 

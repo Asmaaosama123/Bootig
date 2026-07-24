@@ -37,9 +37,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = () => {
+    const role = user?.role;
+    const currentPath = window.location.pathname;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
+
+    if (role === 'admin' || currentPath.startsWith('/admin')) {
+      window.location.href = '/admin/login';
+    } else if (role === 'vendor' || currentPath.startsWith('/my-store') || currentPath.startsWith('/vendor')) {
+      window.location.href = '/vendor/login';
+    } else {
+      window.location.href = '/login';
+    }
   };
 
   const updateUser = (userData: User) => {

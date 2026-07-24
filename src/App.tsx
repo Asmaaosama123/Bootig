@@ -1,22 +1,17 @@
-import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { CartProvider } from './contexts/CartContext';
 import { useAuth } from './contexts/AuthContext';
 
-import Header from './components/Header';
-import CategoryNav from './components/CategoryNav';
-import HeroSection from './components/HeroSection';
-import { ProductSection } from './components/ProductSection';
-import Cart from './components/Cart';
 import BottomNav from './components/BottomNav';
 import EditProduct from './pages/EditProduct';
 
 import LoginPage from './components/LoginPage';
 import VendorLoginPage from './components/VendorLoginPage';
+import AdminLoginPage from './components/AdminLoginPage';
 import UserProfile from './components/UserProfile';
 import MyStore from './components/MyStore';
-import CheckoutPage, { OrderData as CheckoutOrderData } from './components/CheckoutPage';
+import CheckoutPage from './components/CheckoutPage';
 import SuccessPage from './components/SuccessPage';
 
 import BestSellersPage from './pages/BestSellersPage';
@@ -35,62 +30,7 @@ import AdminCategories from './pages/AdminCategories';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminOrders from './pages/AdminOrders';
 import MyOrders from './components/MyOrders';
-import { categories, mockProducts } from './data/products';
-import { Product } from './types';
-import { useFavorites } from './hooks/useFavorites';
 
-function HomePage() {
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [productsLoading, setProductsLoading] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  // const { isFavorite, toggleFavorite, isLoading: favoritesLoading } = useFavorites();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setProductsLoading(true);
-    setTimeout(() => {
-      setAllProducts(mockProducts);
-      setProductsLoading(false);
-    }, 600);
-  }, []);
-
-  // Cart dummy functions
-  const cartItems: Product[] = [];
-  const addToCart = () => {};
-  const removeFromCart = () => {};
-  const updateQuantity = () => {};
-  const getCartItemCount = () => 0;
-  const getCartTotal = () => 0;
-  const isInCart = () => false;
-  const clearCart = () => {};
-  const cartLoading = false;
-
-  const handleProductClick = (product: Product) => {
-    navigate(`/product/${product.id}`);
-    window.scrollTo(0, 0);
-  };
-
-  return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
-      <Header
-        cartItemCount={getCartItemCount()}
-        onCartClick={() => setIsCartOpen(true)}
-        onLogoClick={() => navigate('/')}
-      />
-
-      <CategoryNav
-        categories={categories}
-        selectedCategory="all"
-        onCategorySelect={(slug) => navigate(`/category/${slug}`)}
-      />
-
-      <main className="bg-white">
-        <HeroSection onShopNowClick={() => navigate('/best-sellers')} />
-      </main>
-    </div>
-  );
-}
 
 function App() {
   const { user, loading, logout } = useAuth();
@@ -118,6 +58,10 @@ function App() {
           <>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/vendor/login" element={<VendorLoginPage />} />
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
+            <Route path="/my-store/*" element={<Navigate to="/vendor/login" replace />} />
+            <Route path="/vendor/*" element={<Navigate to="/vendor/login" replace />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </>
         ) : (
@@ -138,6 +82,12 @@ function App() {
               />
             } />
             <Route path="/vendor/login" element={
+              <Navigate
+                to={getHomeRedirect()}
+                replace
+              />
+            } />
+            <Route path="/admin/login" element={
               <Navigate
                 to={getHomeRedirect()}
                 replace

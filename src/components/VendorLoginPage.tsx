@@ -209,7 +209,7 @@ const VendorLoginPage: React.FC = () => {
           )}
         </div>
 
-        {/* Bottom Toggle Button & Switch Portal Link */}
+        {/* Bottom Toggle Button */}
         <div className="flex flex-col space-y-3 mt-10">
           <button
             type="button"
@@ -217,14 +217,6 @@ const VendorLoginPage: React.FC = () => {
             className="w-full bg-[#FFC000] text-black font-extrabold py-3.5 text-xs tracking-widest hover:bg-[#E0A800] transition-colors uppercase font-sans"
           >
             {mode === 'login' ? 'LOG-UP' : 'LOG-IN'}
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => navigate('/login')}
-            className="text-[11px] font-bold text-gray-400 hover:text-black transition-colors underline underline-offset-4 self-center uppercase tracking-wider font-sans"
-          >
-            Go to Customer Portal
           </button>
         </div>
 

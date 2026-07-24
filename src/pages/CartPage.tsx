@@ -12,7 +12,7 @@ import {
 import { useCart } from "../contexts/CartContext";
 import BottomNav from "../components/BottomNav";
 import toast from "react-hot-toast";
-import { stores } from "../data/storesData";
+
 
 
 const CartPage: React.FC = () => {
@@ -145,8 +145,7 @@ const CartPage: React.FC = () => {
               <div
                 className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition"
                 onClick={() => {
-                  const targetStore = stores.find((s) => s.name === store);
-                  if (targetStore) navigate(`/store/${targetStore.id}`);
+                  navigate(`/stores?search=${encodeURIComponent(store || '')}`);
                 }}
                                 >
                 <div className="flex items-center gap-2">

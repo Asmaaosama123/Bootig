@@ -162,32 +162,68 @@ const SubcategoryHierarchyPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Sub-Sub-Categories Row (only shown if they exist) */}
+        {/* Sub-Sub-Categories Section (Rendered with Image + Name cards) */}
         {subSubcategories.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto px-4 py-2 scrollbar-hide bg-gray-50 border-t border-gray-100">
-            <button
-              onClick={() => setSelectedSubSub("")}
-              className={`flex-shrink-0 px-3 py-1 text-[11px] font-semibold uppercase border transition ${
-                selectedSubSub === ""
-                  ? "bg-black text-white border-black"
-                  : "bg-white text-gray-600 border-gray-200"
-              }`}
-            >
-              الكل
-            </button>
-            {subSubcategories.map((s) => (
-              <button
-                key={s.name}
-                onClick={() => setSelectedSubSub(s.name)}
-                className={`flex-shrink-0 px-3 py-1 text-[11px] font-semibold uppercase border transition ${
-                  selectedSubSub === s.name
-                    ? "bg-black text-white border-black"
-                    : "bg-white text-gray-600 border-gray-200"
-                }`}
+          <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
+            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+              Types / {selectedSubcategory}
+            </p>
+            <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-hide">
+              {/* Option to select ALL */}
+              <div
+                onClick={() => setSelectedSubSub("")}
+                className="flex flex-col items-center cursor-pointer flex-shrink-0"
               >
-                {s.name}
-              </button>
-            ))}
+                <div
+                  className={`w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center border-2 transition ${
+                    selectedSubSub === ""
+                      ? "border-black bg-black text-white shadow-sm"
+                      : "border-gray-200 bg-white text-gray-700"
+                  }`}
+                >
+                  <span className="text-[11px] font-extrabold uppercase">ALL</span>
+                </div>
+                <p
+                  className={`text-[11px] mt-1.5 text-center uppercase font-bold w-16 truncate ${
+                    selectedSubSub === "" ? "text-black font-extrabold" : "text-gray-500"
+                  }`}
+                >
+                  الكل
+                </p>
+              </div>
+
+              {subSubcategories.map((s) => {
+                const isSelected = selectedSubSub.toLowerCase() === s.name.toLowerCase();
+                return (
+                  <div
+                    key={s.name}
+                    onClick={() => setSelectedSubSub(isSelected ? "" : s.name)}
+                    className="flex flex-col items-center cursor-pointer flex-shrink-0"
+                  >
+                    <div
+                      className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition ${
+                        isSelected
+                          ? "border-black ring-2 ring-black/20 shadow-md"
+                          : "border-gray-200 hover:border-gray-400 bg-white"
+                      }`}
+                    >
+                      <img
+                        src={s.imageUrl || "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300&h=300&fit=crop"}
+                        alt={s.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p
+                      className={`text-[11px] mt-1.5 text-center uppercase font-bold w-16 truncate ${
+                        isSelected ? "text-black font-black" : "text-gray-700"
+                      }`}
+                    >
+                      {s.name}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
